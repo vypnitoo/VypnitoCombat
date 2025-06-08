@@ -60,6 +60,7 @@ public class CombatListener implements Listener {
 		Player damager = (Player) event.getDamager();
 		Player damaged = (Player) event.getEntity();
 
+
 		// Check 1: Global PvP Toggle
 		if (!configManager.isGlobalPvpEnabled()) {
 			event.setCancelled(true);

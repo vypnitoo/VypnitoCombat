@@ -25,6 +25,7 @@ public class CombatManager {
 		this.elytraCooldowns = new HashMap<>();
 	}
 
+
 	public boolean isInCombat(Player player) {
 		return combatTimers.getOrDefault(player.getUniqueId(), 0L) > System.currentTimeMillis();
 	}
@@ -45,14 +46,14 @@ public class CombatManager {
 			if (currentEndTime != null && currentEndTime.equals(newCombatEndTime)) {
 				exitCombat(player, CombatExitReason.NATURAL_TIMEOUT);
 			}
-		}, (long) seconds * 20L);
-
+	  }, (long) seconds * 20L);
 		combatTasks.put(player.getUniqueId(), task);
 
 		if (!wasInCombat) {
 			player.sendMessage(plugin.getMessageManager().getMessage("enter_combat").replace("%seconds%", String.valueOf(seconds)));
 		}
 	}
+
 
 	public void enterCombat(Player player) {
 		enterCombat(player, plugin.getConfigManager().getCombatDurationSeconds());
@@ -107,12 +108,13 @@ public class CombatManager {
 		return true;
 	}
 
+
 	public long getElytraCooldownRemainingSeconds(Player player) {
 		if (!isElytraOnCooldown(player)) return 0;
 		long remainingMillis = elytraCooldowns.get(player.getUniqueId()) - System.currentTimeMillis();
 		return (long) Math.ceil(remainingMillis / 1000.0);
 	}
-
+  
 	public void handleCombatLog(Player player) {
 		if (plugin.getConfigManager().shouldPunishmentKillPlayer()) {
 			player.setHealth(0.0);

@@ -34,18 +34,20 @@ public class VypnitoCombat extends JavaPlugin {
 	public void onEnable() {
 		getLogger().info("====================================");
 		getLogger().info("===       VypnitoCombat          ===");
-		getLogger().info("===       MADE BY VYPNITO          ===");
+		getLogger().info("===       MADE BY VYPNITO        ===");
 		getLogger().info("====================================");
+
 
 		// Update and load configurations
 		ConfigUpdater.update(this, "config.yml");
 		ConfigUpdater.update(this, "messages.yml");
-		this.reloadConfig(); // Load the potentially updated config into memory
+		reloadConfig(); // Load the potentially updated config into memory
 
 		// Initialize Managers
-		this.configManager = new ConfigManager(this.getConfig());
-		this.messageManager = new MessageManager(this);
-		this.combatManager = new CombatManager(this);
+		configManager = new ConfigManager(this.getConfig());
+		messageManager = new MessageManager(this);
+		combatManager = new CombatManager(this);
+
 
 		// Initialize Integrations
 		setupIntegrations();
@@ -56,8 +58,9 @@ public class VypnitoCombat extends JavaPlugin {
 		getCommand("vypnitocombat").setExecutor(new VypnitoCombatCommand(this));
 		getCommand("pvp").setExecutor(new PvPCommand(this));
 
-		// Start Scheduled Tasks
-		this.elytraMonitorTask = new ElytraFlightMonitor(this).runTaskTimer(this, 0L, 5L);
+		elytraMonitorTask = new ElytraFlightMonitor(this).runTaskTimer(this, 0L, 5L);
+
+
 		manageActionBarTask();
 
 		getLogger().info(messageManager.getRawMessage("plugin_enabled", "&aVypnitoCombat has been enabled!"));
@@ -65,8 +68,9 @@ public class VypnitoCombat extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		if (this.elytraMonitorTask != null) this.elytraMonitorTask.cancel();
-		if (this.actionBarMonitorTask != null) this.actionBarMonitorTask.cancel();
+		if (elytraMonitorTask != null) elytraMonitorTask.cancel();
+		if (actionBarMonitorTask != null) actionBarMonitorTask.cancel();
+
 		getLogger().info(messageManager.getRawMessage("plugin_disabled", "&cVypnitoCombat has been disabled!"));
 	}
 
@@ -79,9 +83,9 @@ public class VypnitoCombat extends JavaPlugin {
 		ConfigUpdater.update(this, "messages.yml");
 
 		// Now, reload the values from the files
-		this.reloadConfig();
-		this.configManager = new ConfigManager(this.getConfig());
-		this.messageManager.reloadMessages();
+		reloadConfig();
+		configManager = new ConfigManager(this.getConfig());
+		messageManager.reloadMessages();
 
 		// Restart tasks that depend on the config
 		manageActionBarTask();
@@ -95,7 +99,7 @@ public class VypnitoCombat extends JavaPlugin {
 	private void setupIntegrations() {
 		if (configManager.isWorldGuardIntegrationEnabled() && Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
 			try {
-				this.regionProvider = WorldGuardBootstrapper.initialize(this);
+				regionProvider = WorldGuardBootstrapper.initialize(this);
 			} catch (Throwable t) {
 				getLogger().warning("An error occurred while initializing the WorldGuard hook. Region features disabled.");
 				t.printStackTrace();
