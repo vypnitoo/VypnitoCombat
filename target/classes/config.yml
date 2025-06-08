@@ -1,23 +1,15 @@
 # ============================================================ #
-#           Configuration for CombatlogV Plugin                #
+#           Configuration for VypnitoCombat Plugin             #
 # ============================================================ #
 
 # --- Global PvP Settings ---
-# Master switch for server-wide PvP.
-# If set to false, no players can damage each other directly.
 global_pvp_enabled: true
 
 # --- Protections for when Global PvP is Disabled ---
 pvp_protections:
-  # If true, prevents players from placing lava near other players when global PvP is off.
   prevent_lava_placement_near_players: true
-  # The radius (in blocks) to check for nearby players when placing lava.
   lava_check_radius: 3
-
-  # If true, prevents players from harming others with splash potions when global PvP is off.
   prevent_harmful_splash_potions: true
-  # List of potion effects considered harmful and will be blocked.
-  # Effect names from: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
   harmful_potion_effects:
     - HARM
     - POISON
@@ -26,63 +18,45 @@ pvp_protections:
     - WITHER
 
 # --- Core Combat Settings ---
-# Time in seconds that a player remains in combat after the last hit.
 combat_duration_seconds: 10
-
-# Show a countdown timer in the action bar while a player is in combat.
 action_bar_timer: true
-
-# If true, combat tags for both the victim and the attacker will be removed upon a player's death.
 end_combat_on_death: true
 
+# --- Custom Death Message ---
+death_messages:
+  use_custom_when_in_combat: false
 
 # --- Region Protections (Requires WorldGuard) ---
 region_protections:
-  # If true, players who are in combat will be pushed back when they try to enter a "safe" region.
-  # A safe region is one with the flag 'pvp: deny' or 'invincible: allow'.
   prevent_safe_zone_entry_in_combat: true
-
-  # How strong the "bounce" effect is when a player is pushed back from a safe zone.
-  # Higher values = stronger push. Good values are between 0.5 and 1.5.
   pushback_strength: 0.8
-
 
 # --- In-Combat Restrictions ---
 combat_restrictions:
-  # Block the usage of tridents with the Riptide enchantment while in combat.
   block_riptide: true
-  # A list of other items (by their Material name) that are blocked during combat.
+  # DANGEROUS: If true, instantly sets an equipped elytra's durability to 1 when a player
+  # enters combat or an elytra cooldown period. This is effective but punitive.
+  damage_elytra_on_restrict: true
   blocked_items_in_combat:
-    - ELYTRA
-  # A list of commands (without the leading slash) that are blocked during combat.
+    - ELYTRA # This now primarily blocks firework boosting
   blocked_commands_in_combat:
     - "home"
     - "spawn"
     - "tpa"
     - "warp"
 
-
 # --- Cooldowns After Combat ---
-# Configure cooldowns for items/mechanics after a player leaves combat.
 cooldowns_after_combat:
-  # Time in seconds that a player cannot use an Elytra after combat ends. Set to 0 to disable.
   elytra_seconds: 20
-  # Cooldown for Ender Pearls in seconds after a player exits combat. Set to 0 to disable.
   ender_pearl_seconds: 15
-
 
 # --- Punishments for Combat Logging ---
 punishments:
-  # Should the player be killed instantly if they log out during combat?
   kill_player: true
-  # A list of commands to be executed by the console when a player combat logs.
-  # Use %player% as a placeholder for the player's name.
   execute_commands:
     - "broadcast &c%player% combat logged and was punished!"
-
 
 # --- Integrations ---
 integrations:
   worldguard:
-    # Set to true to enable WorldGuard integration features (like region protections).
     enabled: true

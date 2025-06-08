@@ -1,4 +1,5 @@
 com\vypnito\vypnitocombat\integrations\WorldGuardHook.class
+com\vypnito\vypnitocombat\utils\ConfigUpdater.class
 com\vypnito\vypnitocombat\CombatExitReason.class
 com\vypnito\vypnitocombat\PvPCommand.class
 com\vypnito\vypnitocombat\managers\CombatManager.class

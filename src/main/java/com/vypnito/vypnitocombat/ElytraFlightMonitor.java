@@ -20,33 +20,34 @@ public class ElytraFlightMonitor extends BukkitRunnable {
 	@Override
 	public void run() {
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (player.hasPermission("combatlogv.bypass.combat")) {
+			// We only care about players who are actively gliding.
+			if (!player.isGliding()) {
 				continue;
 			}
 
-			// Kontrolujeme, zda hráč letí na elytře
-			if (player.isGliding() && player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType() == Material.ELYTRA) {
-				boolean stopped = false;
+			if (player.hasPermission("vypnitocombat.bypass.combat")) {
+				continue;
+			}
 
-				// Podmínka 1: Hráč je v boji
-				if (combatManager.isInCombat(player)) {
-					player.sendMessage(messageManager.getMessage("combat_block_elytra"));
-					stopped = true;
-				}
-				// Podmínka 2: Hráč je v cooldownu po boji (pokud nebyl zastaven už první podmínkou)
-				else if (combatManager.isElytraOnCooldown(player)) {
-					long remaining = combatManager.getElytraCooldownRemainingSeconds(player);
-					player.sendMessage(messageManager.getMessage("elytra_cooldown_active").replace("%time%", String.valueOf(remaining)));
-					stopped = true;
-				}
+			// Check if the player is under any restriction (in combat OR on elytra cooldown).
+			if (combatManager.isInCombat(player) || combatManager.isElytraOnCooldown(player)) {
 
-				// Pokud byla splněna jakákoliv blokující podmínka, zastavíme let
-				if (stopped) {
-					player.setGliding(false);
-					// Mírný "šťouchanec" dolů, aby se zabránilo okamžité reaktivaci
-					if (!player.isOnGround()) {
-						player.teleport(player.getLocation().subtract(0, 0.1, 0));
+				// Final check to ensure they are wearing an elytra.
+				if (player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType() == Material.ELYTRA) {
+
+					// Send the appropriate warning message.
+					if (combatManager.isInCombat(player)) {
+						player.sendMessage(messageManager.getMessage("combat_block_elytra"));
+					} else { // Must be on cooldown if not in combat.
+						long remaining = combatManager.getElytraCooldownRemainingSeconds(player);
+						player.sendMessage(messageManager.getMessage("elytra_cooldown_active").replace("%time%", String.valueOf(remaining)));
 					}
+
+					// --- THE FIX ---
+					// Simply stop the gliding state. The server's vanilla physics will handle the rest,
+					// including calculating and applying the correct fall damage.
+					// The player.setVelocity() line has been removed.
+					player.setGliding(false);
 				}
 			}
 		}
