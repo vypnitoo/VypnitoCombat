@@ -38,7 +38,7 @@ public class VypnitoCombat extends JavaPlugin {
 	public void onEnable() {
 		getLogger().info("====================================");
 		getLogger().info("===       VypnitoCombat          ===");
-		getLogger().info("===       MADE BY VYPNITO          ===");
+		getLogger().info("===       MADE BY VYPNITO        ===");
 		getLogger().info("====================================");
 
 		// Managers
