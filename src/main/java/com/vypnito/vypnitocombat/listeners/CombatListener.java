@@ -62,7 +62,7 @@ public class CombatListener implements Listener {
 		Location from = event.getFrom();
 		Location to = event.getTo();
 
-		if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ() && from.getBlockY() == to.getBlockY()) {
+		if (from.distance(to) < 0.1) {
 			return;
 		}
 

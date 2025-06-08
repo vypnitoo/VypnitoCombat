@@ -46,26 +46,23 @@ public class VypnitoCombatPlaceholders extends PlaceholderExpansion {
 			return "";
 		}
 
-		switch (params.toLowerCase()) {
-			case "in_combat":
-				return combatManager.isInCombat(player)
-						? messageManager.getRawMessage("placeholder_in_combat_yes", "&aYes")
-						: messageManager.getRawMessage("placeholder_in_combat_no", "&cNo");
-
-			case "time_remaining":
-				if (combatManager.isInCombat(player)) {
-					Long endTime = combatManager.getCombatEndTime(player.getUniqueId());
-					if (endTime != null) {
-						long remainingMillis = endTime - System.currentTimeMillis();
-						if (remainingMillis > 0) {
-							return String.format("%.1f", remainingMillis / 1000.0);
-						}
-					}
-				}
-				return messageManager.getRawMessage("placeholder_not_in_combat_time", "0.0");
-
-			default:
-				return null;
-		}
+        return switch (params.toLowerCase()) {
+            case "in_combat" -> combatManager.isInCombat(player)
+                    ? messageManager.getRawMessage("placeholder_in_combat_yes", "&aYes")
+                    : messageManager.getRawMessage("placeholder_in_combat_no", "&cNo");
+            case "time_remaining" -> {
+                if (combatManager.isInCombat(player)) {
+                    Long endTime = combatManager.getCombatEndTime(player.getUniqueId());
+                    if (endTime != null) {
+                        long remainingMillis = endTime - System.currentTimeMillis();
+                        if (remainingMillis > 0) {
+                            yield String.format("%.1f", remainingMillis / 1000.0);
+                        }
+                    }
+                }
+                yield messageManager.getRawMessage("placeholder_not_in_combat_time", "0.0");
+            }
+            default -> null;
+        };
 	}
 }

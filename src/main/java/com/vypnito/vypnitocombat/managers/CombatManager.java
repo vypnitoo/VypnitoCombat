@@ -29,8 +29,28 @@ public class CombatManager {
 	}
 
 	// ... enterCombat and isInCombat methods remain the same ...
-	public boolean isInCombat(Player player) { return combatTimers.getOrDefault(player.getUniqueId(), 0L) > System.currentTimeMillis(); }
-	public void enterCombat(Player player, int seconds) { if (player.hasPermission("vypnitocombat.bypass.combat")) return; boolean wasInCombat = isInCombat(player); long newCombatEndTime = System.currentTimeMillis() + (seconds * 1000L); combatTimers.put(player.getUniqueId(), newCombatEndTime); if (combatTasks.containsKey(player.getUniqueId())) { combatTasks.get(player.getUniqueId()).cancel(); } BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> { Long currentEndTime = combatTimers.get(player.getUniqueId()); if (currentEndTime != null && currentEndTime.equals(newCombatEndTime)) { exitCombat(player, CombatExitReason.NATURAL_TIMEOUT); } }, (long) seconds * 20L); combatTasks.put(player.getUniqueId(), task); if (!wasInCombat) { player.sendMessage(plugin.getMessageManager().getMessage("enter_combat") .replace("%seconds%", String.valueOf(seconds))); } }
+	public boolean isInCombat(Player player) {
+		return combatTimers.getOrDefault(player.getUniqueId(), 0L) > System.currentTimeMillis();
+	}
+	public void enterCombat(Player player, int seconds) {
+		if (player.hasPermission("vypnitocombat.bypass.combat")) return;
+		boolean wasInCombat = isInCombat(player);
+		long newCombatEndTime = System.currentTimeMillis() + (seconds * 1000L);
+		combatTimers.put(player.getUniqueId(), newCombatEndTime);
+		if (combatTasks.containsKey(player.getUniqueId())) {
+			combatTasks.get(player.getUniqueId()).cancel();
+		}
+		BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+			Long currentEndTime = combatTimers.get(player.getUniqueId());
+			if (currentEndTime != null && currentEndTime.equals(newCombatEndTime)) {
+				exitCombat(player, CombatExitReason.NATURAL_TIMEOUT);
+			}
+			}, (long) seconds * 20L);
+		combatTasks.put(player.getUniqueId(), task);
+		if (!wasInCombat) {
+			player.sendMessage(plugin.getMessageManager().getMessage("enter_combat").replace("%seconds%", String.valueOf(seconds)));
+		}
+	}
 	public void enterCombat(Player player) { enterCombat(player, plugin.getConfigManager().getCombatDurationSeconds()); }
 
 	public void exitCombat(Player player, CombatExitReason reason) {
@@ -79,8 +99,21 @@ public class CombatManager {
 	}
 
 	// ... all other methods (getElytraCooldownRemainingSeconds, handleCombatLog, getters) remain the same ...
-	public long getElytraCooldownRemainingSeconds(Player player) { if (!isElytraOnCooldown(player)) return 0; long remainingMillis = elytraCooldowns.get(player.getUniqueId()) - System.currentTimeMillis(); return (long) Math.ceil(remainingMillis / 1000.0); }
-	public void handleCombatLog(Player player) { if (plugin.getConfigManager().shouldPunishmentKillPlayer()) { player.setHealth(0.0); } List<String> commands = plugin.getConfigManager().getPunishmentCommands(); for (String command : commands) { String processedCommand = command.replace("%player%", player.getName()); Bukkit.dispatchCommand(Bukkit.getConsoleSender(), processedCommand); } }
+	public long getElytraCooldownRemainingSeconds(Player player) {
+		if (!isElytraOnCooldown(player)) return 0;
+		long remainingMillis = elytraCooldowns.get(player.getUniqueId()) - System.currentTimeMillis();
+		return (long) Math.ceil(remainingMillis / 1000.0);
+	}
+	public void handleCombatLog(Player player) {
+		if (plugin.getConfigManager().shouldPunishmentKillPlayer()) {
+			player.setHealth(0.0);
+		}
+		List<String> commands = plugin.getConfigManager().getPunishmentCommands();
+		for (String command : commands) {
+			String processedCommand = command.replace("%player%", player.getName());
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), processedCommand);
+		}
+	}
 	public Map<UUID, Long> getCombatTimers() { return combatTimers; }
 	public Long getCombatEndTime(UUID uuid) { return combatTimers.get(uuid); }
 }

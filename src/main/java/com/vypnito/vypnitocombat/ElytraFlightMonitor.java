@@ -23,30 +23,26 @@ public class ElytraFlightMonitor extends BukkitRunnable {
 			if (player.hasPermission("combatlogv.bypass.combat")) {
 				continue;
 			}
+			if(!player.isGliding() || player.getInventory().getChestplate() == null || player.getInventory().getChestplate().getType() != Material.ELYTRA)
+				return;
 
-			// Kontrolujeme, zda hráč letí na elytře
-			if (player.isGliding() && player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType() == Material.ELYTRA) {
-				boolean stopped = false;
+			boolean stopped = false;
 
-				// Podmínka 1: Hráč je v boji
-				if (combatManager.isInCombat(player)) {
-					player.sendMessage(messageManager.getMessage("combat_block_elytra"));
-					stopped = true;
-				}
-				// Podmínka 2: Hráč je v cooldownu po boji (pokud nebyl zastaven už první podmínkou)
-				else if (combatManager.isElytraOnCooldown(player)) {
-					long remaining = combatManager.getElytraCooldownRemainingSeconds(player);
-					player.sendMessage(messageManager.getMessage("elytra_cooldown_active").replace("%time%", String.valueOf(remaining)));
-					stopped = true;
-				}
+			if (combatManager.isInCombat(player)) {
+				player.sendMessage(messageManager.getMessage("combat_block_elytra"));
+				stopped = true;
+			}
+			else if (combatManager.isElytraOnCooldown(player)) {
+				long remaining = combatManager.getElytraCooldownRemainingSeconds(player);
+				player.sendMessage(messageManager.getMessage("elytra_cooldown_active").replace("%time%", String.valueOf(remaining)));
+				stopped = true;
+			}
 
-				// Pokud byla splněna jakákoliv blokující podmínka, zastavíme let
-				if (stopped) {
-					player.setGliding(false);
-					// Mírný "šťouchanec" dolů, aby se zabránilo okamžité reaktivaci
-					if (!player.isOnGround()) {
-						player.teleport(player.getLocation().subtract(0, 0.1, 0));
-					}
+			if (stopped) { // Pokud byla splněna jakákoliv blokující podmínka, zastavíme let
+				player.setGliding(false);
+				// Mírný "šťouchanec" dolů, aby se zabránilo okamžité reaktivaci
+				if (!player.isOnGround()) { // is writable by client side
+					player.teleport(player.getLocation().subtract(0, 0.1, 0)); // this doesnt check if player is gonna be in a block?
 				}
 			}
 		}
