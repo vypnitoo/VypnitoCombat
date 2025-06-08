@@ -4,6 +4,7 @@ main: com.vypnito.vypnitocombat.VypnitoCombat
 api-version: 1.21
 authors: [Vypnito]
 description: A comprehensive combat management plugin.
+
 softdepend: [PlaceholderAPI, WorldGuard]
 
 commands:
@@ -25,8 +26,14 @@ permissions:
     description: Allows reloading the plugin configuration.
     default: op
   vypnitocombat.bypass.combat:
-    description: Allows bypassing all combat rules.
+    description: Allows bypassing all in-combat restrictions (items, commands, etc.).
     default: op
+
+  # --- NEW PERMISSION ---
+  vypnitocombat.bypass.region:
+    description: Allows starting combat even in regions where it is disabled by a flag.
+    default: op
+
   vypnitocombat.pvp.manage:
     description: Allows managing the global PvP status.
     default: op
@@ -39,14 +46,20 @@ permissions:
   vypnitocombat.untag:
     description: Allows manually removing a player from combat.
     default: op
+  vypnitocombat.update.notify:
+    description: Receives a notification when a new version of the plugin is available.
+    default: op
+
   vypnitocombat.*:
     description: Grants all VypnitoCombat permissions.
     children:
       vypnitocombat.command.use: true
       vypnitocombat.reload: true
       vypnitocombat.bypass.combat: true
+      vypnitocombat.bypass.region: true # <-- Added
       vypnitocombat.pvp.manage: true
       vypnitocombat.status: true
       vypnitocombat.tag: true
       vypnitocombat.untag: true
+      vypnitocombat.update.notify: true
     default: op

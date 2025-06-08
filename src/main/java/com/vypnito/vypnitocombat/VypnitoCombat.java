@@ -8,13 +8,13 @@ import com.vypnito.vypnitocombat.listeners.PlayerQuitListener;
 import com.vypnito.vypnitocombat.managers.CombatManager;
 import com.vypnito.vypnitocombat.managers.ConfigManager;
 import com.vypnito.vypnitocombat.managers.MessageManager;
+import com.vypnito.vypnitocombat.utils.ConfigUpdater; // Import the new utility class
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 public class VypnitoCombat extends JavaPlugin {
 
-	// DatabaseManager has been removed
 	private CombatManager combatManager;
 	private ConfigManager configManager;
 	private MessageManager messageManager;
@@ -37,24 +37,30 @@ public class VypnitoCombat extends JavaPlugin {
 		getLogger().info("===       MADE BY VYPNITO        ===");
 		getLogger().info("====================================");
 
-		// Managers
-		saveDefaultConfig();
-		configManager = new ConfigManager(getConfig());
+
+		// Update and load configurations
+		ConfigUpdater.update(this, "config.yml");
+		ConfigUpdater.update(this, "messages.yml");
+		reloadConfig(); // Load the potentially updated config into memory
+
+		// Initialize Managers
+		configManager = new ConfigManager(this.getConfig());
 		messageManager = new MessageManager(this);
-		// CombatManager no longer needs the database
 		combatManager = new CombatManager(this);
 
-		// Integrations
+
+		// Initialize Integrations
 		setupIntegrations();
 
-		// Listeners & Commands
+		// Register Listeners & Commands
 		getServer().getPluginManager().registerEvents(new CombatListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		getCommand("vypnitocombat").setExecutor(new VypnitoCombatCommand(this));
 		getCommand("pvp").setExecutor(new PvPCommand(this));
 
-		// Tasks
 		elytraMonitorTask = new ElytraFlightMonitor(this).runTaskTimer(this, 0L, 5L);
+
+
 		manageActionBarTask();
 
 		getLogger().info(messageManager.getRawMessage("plugin_enabled", "&aVypnitoCombat has been enabled!"));
@@ -64,10 +70,32 @@ public class VypnitoCombat extends JavaPlugin {
 	public void onDisable() {
 		if (elytraMonitorTask != null) elytraMonitorTask.cancel();
 		if (actionBarMonitorTask != null) actionBarMonitorTask.cancel();
-		// Disconnecting from the database is no longer needed
+
 		getLogger().info(messageManager.getRawMessage("plugin_disabled", "&cVypnitoCombat has been disabled!"));
 	}
 
+	/**
+	 * Reloads all plugin configurations and restarts necessary tasks.
+	 */
+	public void reloadPlugin() {
+		// First, update the files with any new keys
+		ConfigUpdater.update(this, "config.yml");
+		ConfigUpdater.update(this, "messages.yml");
+
+		// Now, reload the values from the files
+		reloadConfig();
+		configManager = new ConfigManager(this.getConfig());
+		messageManager.reloadMessages();
+
+		// Restart tasks that depend on the config
+		manageActionBarTask();
+
+		getLogger().info("VypnitoCombat config and messages reloaded.");
+	}
+
+	/**
+	 * Sets up hooks for optional dependencies like WorldGuard and PlaceholderAPI.
+	 */
 	private void setupIntegrations() {
 		if (configManager.isWorldGuardIntegrationEnabled() && Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
 			try {
@@ -85,25 +113,30 @@ public class VypnitoCombat extends JavaPlugin {
 		}
 	}
 
-	// ... all other methods (reloadPlugin, manageActionBarTask, getters) remain the same ...
-
-	public void reloadPlugin() {
-		reloadConfig();
-		configManager = new ConfigManager(getConfig());
-		messageManager.reloadMessages();
-		manageActionBarTask();
-		getLogger().info("VypnitoCombat config and messages reloaded.");
-	}
-
+	/**
+	 * Manages the ActionBar display task based on the current config settings.
+	 */
 	private void manageActionBarTask() {
-		if (actionBarMonitorTask != null && !actionBarMonitorTask.isCancelled()) // only cancel if it's not already cancelled
-			actionBarMonitorTask.cancel();
+		if (this.actionBarMonitorTask != null) this.actionBarMonitorTask.cancel();
 		if (configManager.isActionBarTimerEnabled()) {
-			actionBarMonitorTask = new ActionBarMonitor(this).runTaskTimer(this, 0L, 2L);
+			this.actionBarMonitorTask = new ActionBarMonitor(this).runTaskTimer(this, 0L, 2L);
 		}
 	}
-	public CombatManager getCombatManager() { return combatManager; }
-	public ConfigManager getConfigManager() { return configManager; }
-	public MessageManager getMessageManager() { return messageManager; }
-	public RegionProvider getRegionProvider() { return regionProvider; }
+
+	// --- Getters ---
+	public CombatManager getCombatManager() {
+		return combatManager;
+	}
+
+	public ConfigManager getConfigManager() {
+		return configManager;
+	}
+
+	public MessageManager getMessageManager() {
+		return messageManager;
+	}
+
+	public RegionProvider getRegionProvider() {
+		return regionProvider;
+	}
 }

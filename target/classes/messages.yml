@@ -1,8 +1,7 @@
 # ============================================================ #
-#              Messages for VypnitoCombat Plugin                  #
+#              Messages for VypnitoCombat Plugin               #
 # ============================================================ #
 
-# This prefix will be inserted where you use %prefix%.
 message_prefix: "&7[&bVypnitoCombat&7] "
 
 # --- Combat State Messages ---
@@ -20,7 +19,6 @@ ender_pearl_combat_cooldown_active: "%prefix%&cYou cannot use ender pearls while
 # --- Post-Combat Cooldown Messages ---
 elytra_cooldown_started: "%prefix%&cYour Elytra is disabled for %time% seconds because you left combat."
 elytra_cooldown_active: "%prefix%&cYou cannot use your Elytra yet! Cooldown: &e%time%s"
-ender_pearl_cooldown_message: "%prefix%&cEnder pearl is on cooldown for %time% seconds!"
 
 # --- PvP & Region Protection Messages ---
 pvp_is_disabled: "%prefix%&cYou cannot attack other players, PvP is currently disabled globally."
@@ -28,27 +26,29 @@ pvp_lava_blocked: "%prefix%&cYou cannot place lava near other players while glob
 pvp_potion_blocked: "%prefix%&cYou cannot use harmful splash potions on other players while global PvP is disabled."
 cannot_enter_safe_zone: "%prefix%&cYou cannot enter a safe zone while in combat!"
 
-# --- Punishment Messages ---
+# --- Punishment & Death Messages ---
 combat_log_punishment: "%prefix%&c%player% combat logged! They were killed by the system."
+# Placeholders: %victim%, %killer%
+custom_combat_death_message: "&c%victim% &ewas slain by &c%killer% &ein the heat of battle!"
 
 # --- Plugin & General Command Messages ---
-plugin_enabled: "%prefix%&aCombatlogV has been enabled!"
-plugin_disabled: "%prefix%&cCombatlogV has been disabled!"
+plugin_enabled: "%prefix%&aVypnitoCombat has been enabled!"
+plugin_disabled: "%prefix%&cVypnitoCombat has been disabled!"
 no_permission: "%prefix%&cYou do not have permission to use this command."
-plugin_reloaded: "%prefix%&aCombatlogV has been reloaded successfully!"
+plugin_reloaded: "%prefix%&aVypnitoCombat has been reloaded successfully!"
 player_not_found: "%prefix%&cPlayer %player% is not online."
 invalid_number: "%prefix%&cInvalid number provided for seconds."
-command_unknown_subcommand: "&cUnknown subcommand. Use /clv help for a list of commands."
+command_unknown_subcommand: "&cUnknown subcommand. Use /vc help for a list of commands."
 
-# --- /clv Command Messages ---
-command_usage_main: "&eUsage: /clv <reload|help|status|tag|untag>"
-command_help_header: "&8--- &6CombatLogV Help &8---"
-command_help_reload: "&e/clv reload &7- Reloads the plugin configuration."
-command_help_bypass_perm: "&ecombatlogv.bypass.combat &7- Bypass all combat rules."
+# --- /vc Command Messages ---
+command_usage_main: "&eUsage: /vc <reload|help|status|tag|untag>"
+command_help_header: "&8--- &6VypnitoCombat Help &8---"
+command_help_reload: "&e/vc reload &7- Reloads the plugin configuration."
+command_help_bypass_perm: "&evypnitocombat.bypass.combat &7- Bypass all combat rules."
 command_help_footer: "&8-------------------"
-command_usage_clv_status: "&eUsage: /clv status <player>"
-command_usage_clv_tag: "eUsage: /clv tag <player> [seconds]"
-command_usage_clv_untag: "&eUsage: /clv untag <player>"
+command_usage_clv_status: "&eUsage: /vc status <player>"
+command_usage_clv_tag: "eUsage: /vc tag <player> [seconds]"
+command_usage_clv_untag: "&eUsage: /vc untag <player>"
 status_in_combat: "%prefix%&e%player% &cis in combat for &e%time%s&c."
 status_not_in_combat: "%prefix%&e%player% &ais not in combat."
 player_tagged: "%prefix%&aYou have manually put &e%player% &ainto combat."

@@ -14,7 +14,6 @@ public class ConfigManager {
 
 	public ConfigManager(FileConfiguration config) {
 		this.config = config;
-		// Load collections into faster Set objects on initialization
 		cacheHarmfulEffects();
 	}
 
@@ -27,6 +26,14 @@ public class ConfigManager {
 	}
 
 	// --- Getters ---
+
+	public boolean shouldDamageElytraOnRestrict() {
+		return config.getBoolean("combat_restrictions.damage_elytra_on_restrict", true);
+	}
+
+	public boolean useCustomCombatDeathMessage() {
+		return config.getBoolean("death_messages.use_custom_when_in_combat", true);
+	}
 
 	public boolean isGlobalPvpEnabled() {
 		return config.getBoolean("global_pvp_enabled", true);
