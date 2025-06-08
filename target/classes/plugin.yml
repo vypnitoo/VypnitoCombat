@@ -1,0 +1,52 @@
+name: VypnitoCombat
+version: 1.6.0
+main: com.vypnito.vypnitocombat.VypnitoCombat
+api-version: 1.21
+authors: [Vypnito]
+description: A comprehensive combat management plugin.
+softdepend: [PlaceholderAPI, WorldGuard]
+
+commands:
+  vypnitocombat:
+    description: Main command for the VypnitoCombat plugin.
+    usage: /vc <reload|help|status|tag|untag>
+    aliases: [vc]
+    permission: vypnitocombat.command.use
+  pvp:
+    description: Command for managing global PvP.
+    usage: /pvp global <on|off>
+    permission: vypnitocombat.pvp.manage
+
+permissions:
+  vypnitocombat.command.use:
+    description: Allows using the main command.
+    default: op
+  vypnitocombat.reload:
+    description: Allows reloading the plugin configuration.
+    default: op
+  vypnitocombat.bypass.combat:
+    description: Allows bypassing all combat rules.
+    default: op
+  vypnitocombat.pvp.manage:
+    description: Allows managing the global PvP status.
+    default: op
+  vypnitocombat.status:
+    description: Allows checking the combat status of a player.
+    default: op
+  vypnitocombat.tag:
+    description: Allows manually putting a player into combat.
+    default: op
+  vypnitocombat.untag:
+    description: Allows manually removing a player from combat.
+    default: op
+  vypnitocombat.*:
+    description: Grants all VypnitoCombat permissions.
+    children:
+      vypnitocombat.command.use: true
+      vypnitocombat.reload: true
+      vypnitocombat.bypass.combat: true
+      vypnitocombat.pvp.manage: true
+      vypnitocombat.status: true
+      vypnitocombat.tag: true
+      vypnitocombat.untag: true
+    default: op

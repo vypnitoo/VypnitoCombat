@@ -1,0 +1,65 @@
+# ============================================================ #
+#              Messages for VypnitoCombat Plugin                  #
+# ============================================================ #
+
+# This prefix will be inserted where you use %prefix%.
+message_prefix: "&7[&bVypnitoCombat&7] "
+
+# --- Combat State Messages ---
+enter_combat: "%prefix%&cYou have been attacked! You are in combat for %seconds% seconds."
+exit_combat: "%prefix%&aYou are no longer in combat."
+action_bar_combat_timer: "&cYou are in combat for &e%time%s"
+
+# --- In-Combat Restriction Messages ---
+combat_block_elytra: "%prefix%&cYou cannot use an elytra while in combat!"
+combat_block_riptide: "%prefix%&cYou cannot use a Riptide trident while in combat!"
+combat_block_firework_rocket: "%prefix%&cYou cannot use firework rockets to boost while in combat!"
+combat_block_command: "%prefix%&cYou cannot use this command while in combat!"
+ender_pearl_combat_cooldown_active: "%prefix%&cYou cannot use ender pearls while in combat! Cooldown will apply once combat ends."
+
+# --- Post-Combat Cooldown Messages ---
+elytra_cooldown_started: "%prefix%&cYour Elytra is disabled for %time% seconds because you left combat."
+elytra_cooldown_active: "%prefix%&cYou cannot use your Elytra yet! Cooldown: &e%time%s"
+ender_pearl_cooldown_message: "%prefix%&cEnder pearl is on cooldown for %time% seconds!"
+
+# --- PvP & Region Protection Messages ---
+pvp_is_disabled: "%prefix%&cYou cannot attack other players, PvP is currently disabled globally."
+pvp_lava_blocked: "%prefix%&cYou cannot place lava near other players while global PvP is disabled."
+pvp_potion_blocked: "%prefix%&cYou cannot use harmful splash potions on other players while global PvP is disabled."
+cannot_enter_safe_zone: "%prefix%&cYou cannot enter a safe zone while in combat!"
+
+# --- Punishment Messages ---
+combat_log_punishment: "%prefix%&c%player% combat logged! They were killed by the system."
+
+# --- Plugin & General Command Messages ---
+plugin_enabled: "%prefix%&aCombatlogV has been enabled!"
+plugin_disabled: "%prefix%&cCombatlogV has been disabled!"
+no_permission: "%prefix%&cYou do not have permission to use this command."
+plugin_reloaded: "%prefix%&aCombatlogV has been reloaded successfully!"
+player_not_found: "%prefix%&cPlayer %player% is not online."
+invalid_number: "%prefix%&cInvalid number provided for seconds."
+command_unknown_subcommand: "&cUnknown subcommand. Use /clv help for a list of commands."
+
+# --- /clv Command Messages ---
+command_usage_main: "&eUsage: /clv <reload|help|status|tag|untag>"
+command_help_header: "&8--- &6CombatLogV Help &8---"
+command_help_reload: "&e/clv reload &7- Reloads the plugin configuration."
+command_help_bypass_perm: "&ecombatlogv.bypass.combat &7- Bypass all combat rules."
+command_help_footer: "&8-------------------"
+command_usage_clv_status: "&eUsage: /clv status <player>"
+command_usage_clv_tag: "eUsage: /clv tag <player> [seconds]"
+command_usage_clv_untag: "&eUsage: /clv untag <player>"
+status_in_combat: "%prefix%&e%player% &cis in combat for &e%time%s&c."
+status_not_in_combat: "%prefix%&e%player% &ais not in combat."
+player_tagged: "%prefix%&aYou have manually put &e%player% &ainto combat."
+player_untagged: "%prefix%&aYou have manually removed &e%player% &afrom combat."
+
+# --- /pvp Command Messages ---
+pvp_globally_enabled: "%prefix%&aGlobal PvP has been enabled."
+pvp_globally_disabled: "%prefix%&cGlobal PvP has been disabled."
+command_usage_pvp: "&eUsage: /pvp global <on|off>"
+
+# --- PlaceholderAPI Messages ---
+placeholder_in_combat_yes: "&cYes"
+placeholder_in_combat_no: "&aNo"
+placeholder_not_in_combat_time: "0.0"
