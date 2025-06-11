@@ -12,6 +12,7 @@ public class PlayerQuitListener implements Listener {
 
 	private final CombatManager combatManager;
 
+	// The constructor is simple again, it does not need CombatListener.
 	public PlayerQuitListener(VypnitoCombat plugin) {
 		this.combatManager = plugin.getCombatManager();
 	}
@@ -19,7 +20,11 @@ public class PlayerQuitListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (player.hasPermission("combatlogv.bypass.combat")) {
+
+		// Clear any fake blocks the player might have been seeing when they log out.
+		combatManager.clearVisualBorder(player);
+
+		if (player.hasPermission("vypnitocombat.bypass.combat")) {
 			combatManager.exitCombat(player, CombatExitReason.DISCONNECT);
 			return;
 		}

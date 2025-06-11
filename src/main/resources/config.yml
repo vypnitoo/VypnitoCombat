@@ -3,13 +3,20 @@
 # ============================================================ #
 
 # --- Global PvP Settings ---
+# Master switch for server-wide PvP.
+# If set to false, no players can damage each other directly.
 global_pvp_enabled: true
 
 # --- Protections for when Global PvP is Disabled ---
 pvp_protections:
+  # If true, prevents players from placing lava near other players when global PvP is off.
   prevent_lava_placement_near_players: true
+  # The radius (in blocks) to check for nearby players when placing lava.
   lava_check_radius: 3
+  # If true, prevents players from harming others with splash potions when global PvP is off.
   prevent_harmful_splash_potions: true
+  # List of potion effects considered harmful and will be blocked.
+  # Effect names from: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
   harmful_potion_effects:
     - HARM
     - POISON
@@ -18,27 +25,49 @@ pvp_protections:
     - WITHER
 
 # --- Core Combat Settings ---
+# Time in seconds that a player remains in combat after the last hit.
 combat_duration_seconds: 10
+# Show a countdown timer in the action bar while a player is in combat.
 action_bar_timer: true
+# If true, combat tags for both the victim and the attacker will be removed upon a player's death.
 end_combat_on_death: true
 
 # --- Custom Death Message ---
 death_messages:
+  # If true, a custom message will be used when a player dies while in combat.
   use_custom_when_in_combat: false
 
 # --- Region Protections (Requires WorldGuard) ---
 region_protections:
-  prevent_safe_zone_entry_in_combat: true
+  # Defines the method used to prevent players from entering safe zones while in combat.
+  # Available options:
+  #   VISUAL_BORDER - (PERFORMANCE INTENSIVE) Shows a dynamic wall of fake blocks. Looks premium.
+  #   PUSHBACK      - Physically bounces the player back. Simpler and less resource-intensive. RECCOMENDED
+  #   NONE          - Disables this protection entirely.
+  entry_prevention_method: PUSHBACK
+
+  # --- Settings for the PUSHBACK method ---
+  # How strong the "bounce" effect is when a player is pushed back.
   pushback_strength: 0.8
+
+  # --- Settings for the VISUAL_BORDER method ---
+  # How often (in server ticks, 20 ticks = 1 second) the plugin checks a player's position.
+  visualization_check_interval_ticks: 10
+
+  # The radius (in blocks) around the player in which region borders will be displayed.
+  # WARNING: High values can cause lag! Recommended: 10-15.
+  visualization_display_radius: 15
+
+  # The material of the visual wall.
+  visualization_wall_material: "RED_STAINED_GLASS"
 
 # --- In-Combat Restrictions ---
 combat_restrictions:
   block_riptide: true
-  # DANGEROUS: If true, instantly sets an equipped elytra's durability to 1 when a player
-  # enters combat or an elytra cooldown period. This is effective but punitive.
-  damage_elytra_on_restrict: true
+  # This option is disabled by default because it can interfere with Mending.
+  damage_elytra_on_restrict: false
   blocked_items_in_combat:
-    - ELYTRA # This now primarily blocks firework boosting
+    - ELYTRA
   blocked_commands_in_combat:
     - "home"
     - "spawn"
@@ -60,3 +89,9 @@ punishments:
 integrations:
   worldguard:
     enabled: true
+
+# --- Update Checker ---
+update_checker:
+  enabled: true
+  # Do not change.
+  spigot_resource_id: 125821

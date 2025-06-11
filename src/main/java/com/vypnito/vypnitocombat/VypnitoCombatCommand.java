@@ -163,10 +163,7 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 					.filter(s -> sender.hasPermission("combatlogv." + s))
 					.collect(Collectors.toList());
 		}
-		if (args.length == 2 && (args[0].equalsIgnoreCase("status") ||
-				args[0].equalsIgnoreCase("tag") ||
-				args[0].equalsIgnoreCase("untag"))) {
-
+		if (args.length == 2 && (args[0].equalsIgnoreCase("status") || args[0].equalsIgnoreCase("tag") || args[0].equalsIgnoreCase("untag"))) {
 			return null; // Allows default player name completion
 		}
 		return new ArrayList<>();

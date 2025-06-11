@@ -24,8 +24,6 @@ public class ElytraFlightMonitor extends BukkitRunnable {
 			if (!player.isGliding()) {
 				continue;
 			}
-			if(!player.isGliding() || player.getInventory().getChestplate() == null || player.getInventory().getChestplate().getType() != Material.ELYTRA)
-				return;
 
 			if (player.hasPermission("vypnitocombat.bypass.combat")) {
 				continue;
@@ -50,7 +48,7 @@ public class ElytraFlightMonitor extends BukkitRunnable {
 					// including calculating and applying the correct fall damage.
 					// The player.setVelocity() line has been removed.
 					player.setGliding(false);
-        }
+				}
 			}
 		}
 	}

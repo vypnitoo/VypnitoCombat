@@ -1,8 +1,10 @@
 com\vypnito\vypnitocombat\integrations\WorldGuardHook.class
+com\vypnito\vypnitocombat\listeners\JoinListener.class
 com\vypnito\vypnitocombat\utils\ConfigUpdater.class
 com\vypnito\vypnitocombat\CombatExitReason.class
 com\vypnito\vypnitocombat\PvPCommand.class
 com\vypnito\vypnitocombat\managers\CombatManager.class
+com\vypnito\vypnitocombat\utils\UpdateChecker.class
 com\vypnito\vypnitocombat\listeners\PlayerQuitListener.class
 com\vypnito\vypnitocombat\VypnitoCombatCommand.class
 com\vypnito\vypnitocombat\listeners\CombatListener.class
@@ -10,6 +12,8 @@ com\vypnito\vypnitocombat\VypnitoCombat.class
 com\vypnito\vypnitocombat\managers\MessageManager.class
 com\vypnito\vypnitocombat\managers\ConfigManager.class
 com\vypnito\vypnitocombat\ActionBarMonitor.class
+com\vypnito\vypnitocombat\RegionEntryPrevention.class
+com\vypnito\vypnitocombat\BorderVisualizerTask.class
 com\vypnito\vypnitocombat\integrations\WorldGuardBootstrapper.class
 com\vypnito\vypnitocombat\expansions\VypnitoCombatPlaceholders.class
 com\vypnito\vypnitocombat\integrations\RegionProvider.class
