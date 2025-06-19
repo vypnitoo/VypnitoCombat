@@ -1,5 +1,3 @@
-// In your ConfigManager.java file
-
 package com.vypnito.vypnitocombat.managers;
 
 import com.vypnito.vypnitocombat.RegionEntryPrevention;
@@ -28,19 +26,24 @@ public class ConfigManager {
 				.collect(Collectors.toSet());
 	}
 
-	// --- ADD THIS METHOD ---
+	public boolean isBossBarIndicatorEnabled() {
+		return config.getBoolean("health_indicators.bossbar.enabled", true);
+	}
+
+	public boolean isOverheadIndicatorEnabled() {
+		return config.getBoolean("health_indicators.overhead.enabled", true);
+	}
+
 	public boolean isSafeZoneVisualized() {
-		// Returns true if the entry prevention method is set to VISUAL_BORDER
 		return getRegionEntryPreventionMethod() == RegionEntryPrevention.VISUAL_BORDER;
 	}
 
-	// --- UPDATED REGION GETTERS ---
 	public RegionEntryPrevention getRegionEntryPreventionMethod() {
-		String method = config.getString("region_protections.entry_prevention_method", "PUSHBACK").toUpperCase(); // Changed default to PUSHBACK based on config
+		String method = config.getString("region_protections.entry_prevention_method", "PUSHBACK").toUpperCase();
 		try {
 			return RegionEntryPrevention.valueOf(method);
 		} catch (IllegalArgumentException e) {
-			return RegionEntryPrevention.PUSHBACK; // Default to the safer option if config is invalid
+			return RegionEntryPrevention.PUSHBACK;
 		}
 	}
 
@@ -64,7 +67,6 @@ public class ConfigManager {
 		}
 	}
 
-	// --- Other Getters remain the same ---
 	public boolean useCustomCombatDeathMessage() { return config.getBoolean("death_messages.use_custom_when_in_combat", false); }
 	public boolean isGlobalPvpEnabled() { return config.getBoolean("global_pvp_enabled", true); }
 	public boolean isLavaPlacementPreventionEnabled() { return config.getBoolean("pvp_protections.prevent_lava_placement_near_players", true); }

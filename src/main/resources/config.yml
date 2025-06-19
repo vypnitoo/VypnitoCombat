@@ -37,12 +37,22 @@ death_messages:
   # If true, a custom message will be used when a player dies while in combat.
   use_custom_when_in_combat: false
 
+# --- Health Indicators ---
+health_indicators:
+  # Shows a BossBar with the enemy's health at the top of the attacker's screen.
+  bossbar:
+    enabled: true
+
+  # Shows text with the enemy's health directly above their head.
+  overhead:
+    enabled: true
+
 # --- Region Protections (Requires WorldGuard) ---
 region_protections:
   # Defines the method used to prevent players from entering safe zones while in combat.
   # Available options:
-  #   VISUAL_BORDER - (PERFORMANCE INTENSIVE) Shows a dynamic wall of fake blocks. Looks premium.
-  #   PUSHBACK      - Physically bounces the player back. Simpler and less resource-intensive. RECCOMENDED
+  #   VISUAL_BORDER - (PERFORMANCE INTENSIVE) Shows a dynamic wall of fake blocks.
+  #   PUSHBACK      - Physically bounces the player back. Simpler and less resource-intensive. -RECOMMENDED
   #   NONE          - Disables this protection entirely.
   entry_prevention_method: PUSHBACK
 
@@ -53,11 +63,9 @@ region_protections:
   # --- Settings for the VISUAL_BORDER method ---
   # How often (in server ticks, 20 ticks = 1 second) the plugin checks a player's position.
   visualization_check_interval_ticks: 10
-
   # The radius (in blocks) around the player in which region borders will be displayed.
   # WARNING: High values can cause lag! Recommended: 10-15.
   visualization_display_radius: 15
-
   # The material of the visual wall.
   visualization_wall_material: "RED_STAINED_GLASS"
 

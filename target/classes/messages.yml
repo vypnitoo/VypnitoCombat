@@ -31,6 +31,13 @@ combat_log_punishment: "%prefix%&c%player% combat logged! They were killed by th
 # Placeholders: %victim%, %killer%
 custom_combat_death_message: "&c%victim% &ewas slain by &c%killer% &ein the heat of battle!"
 
+# --- Health Indicator Messages ---
+# Placeholders: %target_name%, %current_health%, %max_health%
+health_indicator_boss_bar: "&f%target_name% - &c%current_health% / %max_health% ❤"
+
+# --- Admin GUI Messages ---
+admin_gui_title: "&4VypnitoCombat Admin"
+
 # --- Plugin & General Command Messages ---
 plugin_enabled: "%prefix%&aVypnitoCombat has been enabled!"
 plugin_disabled: "%prefix%&cVypnitoCombat has been disabled!"
@@ -41,7 +48,7 @@ invalid_number: "%prefix%&cInvalid number provided for seconds."
 command_unknown_subcommand: "&cUnknown subcommand. Use /vc help for a list of commands."
 
 # --- /vc Command Messages ---
-command_usage_main: "&eUsage: /vc <reload|help|status|tag|untag>"
+command_usage_main: "&eUsage: /vc <reload|help|status|tag|untag|admin>"
 command_help_header: "&8--- &6VypnitoCombat Help &8---"
 command_help_reload: "&e/vc reload &7- Reloads the plugin configuration."
 command_help_bypass_perm: "&evypnitocombat.bypass.combat &7- Bypass all combat rules."

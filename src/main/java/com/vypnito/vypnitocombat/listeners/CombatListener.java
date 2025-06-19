@@ -78,7 +78,6 @@ public class CombatListener implements Listener {
 				direction.multiply(configManager.getRegionPushbackStrength());
 				plugin.getServer().getScheduler().runTask(plugin, () -> player.setVelocity(direction));
 			} else if (method == RegionEntryPrevention.VISUAL_BORDER) {
-				// This acts as a final backstop to the visualizer task, preventing glitching.
 				event.setTo(from);
 			}
 		}
@@ -86,10 +85,23 @@ public class CombatListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-		if (!(event.getEntity() instanceof Player && event.getDamager() instanceof Player)) return;
+		if (!(event.getEntity() instanceof Player)) return;
 
-		Player damager = (Player) event.getDamager();
 		Player damaged = (Player) event.getEntity();
+		Player damager = null;
+
+		if (event.getDamager() instanceof Player) {
+			damager = (Player) event.getDamager();
+		} else if (event.getDamager() instanceof Projectile) {
+			Projectile projectile = (Projectile) event.getDamager();
+			if (projectile.getShooter() instanceof Player) {
+				damager = (Player) projectile.getShooter();
+			}
+		}
+
+		if (damager == null || damager.equals(damaged)) {
+			return;
+		}
 
 		if (!configManager.isGlobalPvpEnabled()) {
 			event.setCancelled(true);
@@ -106,6 +118,10 @@ public class CombatListener implements Listener {
 		}
 		combatManager.enterCombat(damaged);
 		combatManager.enterCombat(damager);
+
+		if (configManager.isBossBarIndicatorEnabled()) {
+			plugin.getHealthIndicatorManager().showOrUpdateBossBar(damager, damaged);
+		}
 	}
 
 	@EventHandler
@@ -121,7 +137,7 @@ public class CombatListener implements Listener {
 		if (!configManager.shouldEndCombatOnDeath()) return;
 		combatManager.exitCombat(killed, CombatExitReason.DEATH);
 
-		if (killed.getKiller() instanceof Player) {
+		if (killed.getKiller() != null) {
 			Player playerKiller = killed.getKiller();
 			if (combatManager.isInCombat(playerKiller)) {
 				combatManager.exitCombat(playerKiller, CombatExitReason.DEATH);
@@ -140,7 +156,7 @@ public class CombatListener implements Listener {
 				isEquippingElytra = true;
 			} else if (event.getClick() == ClickType.NUMBER_KEY && player.getInventory().getItem(event.getHotbarButton()) != null && player.getInventory().getItem(event.getHotbarButton()).getType() == Material.ELYTRA && event.getSlotType() == InventoryType.SlotType.ARMOR) {
 				isEquippingElytra = true;
-			} else if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getSlot() == 38) { // Slot 38 is chestplate
+			} else if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getSlot() == 38) {
 				if (event.getCursor() != null && event.getCursor().getType() == Material.ELYTRA) isEquippingElytra = true;
 			}
 			if (isEquippingElytra) {

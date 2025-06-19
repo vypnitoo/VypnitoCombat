@@ -1,5 +1,6 @@
 package com.vypnito.vypnitocombat;
 
+import com.vypnito.vypnitocombat.managers.AdminGuiManager;
 import com.vypnito.vypnitocombat.managers.CombatManager;
 import com.vypnito.vypnitocombat.managers.ConfigManager;
 import com.vypnito.vypnitocombat.managers.MessageManager;
@@ -22,12 +23,14 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 	private final MessageManager messageManager;
 	private final CombatManager combatManager;
 	private final ConfigManager configManager;
+	private final AdminGuiManager adminGuiManager;
 
 	public VypnitoCombatCommand(VypnitoCombat plugin) {
 		this.plugin = plugin;
 		this.messageManager = plugin.getMessageManager();
 		this.combatManager = plugin.getCombatManager();
 		this.configManager = plugin.getConfigManager();
+		this.adminGuiManager = plugin.getAdminGuiManager();
 	}
 
 	@Override
@@ -55,6 +58,9 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 			case "untag":
 				handleUntag(sender, args);
 				break;
+			case "admin":
+				handleAdmin(sender);
+				break;
 			default:
 				sender.sendMessage(messageManager.getMessage("command_unknown_subcommand"));
 				break;
@@ -63,7 +69,7 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 	}
 
 	private void handleReload(CommandSender sender) {
-		if (!sender.hasPermission("combatlogv.reload")) {
+		if (!sender.hasPermission("vypnitocombat.reload")) {
 			sender.sendMessage(messageManager.getMessage("no_permission"));
 			return;
 		}
@@ -78,8 +84,20 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 		sender.sendMessage(messageManager.getMessage("command_help_footer"));
 	}
 
+	private void handleAdmin(CommandSender sender) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("This command can only be used by a player.");
+			return;
+		}
+		if (!sender.hasPermission("vypnitocombat.admin")) {
+			sender.sendMessage(messageManager.getMessage("no_permission"));
+			return;
+		}
+		adminGuiManager.openAdminGui((Player) sender);
+	}
+
 	private void handleStatus(CommandSender sender, String[] args) {
-		if (!sender.hasPermission("combatlogv.status")) {
+		if (!sender.hasPermission("vypnitocombat.status")) {
 			sender.sendMessage(messageManager.getMessage("no_permission"));
 			return;
 		}
@@ -105,7 +123,7 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 	}
 
 	private void handleTag(CommandSender sender, String[] args) {
-		if (!sender.hasPermission("combatlogv.tag")) {
+		if (!sender.hasPermission("vypnitocombat.tag")) {
 			sender.sendMessage(messageManager.getMessage("no_permission"));
 			return;
 		}
@@ -135,7 +153,7 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 	}
 
 	private void handleUntag(CommandSender sender, String[] args) {
-		if (!sender.hasPermission("combatlogv.untag")) {
+		if (!sender.hasPermission("vypnitocombat.untag")) {
 			sender.sendMessage(messageManager.getMessage("no_permission"));
 			return;
 		}
@@ -157,14 +175,14 @@ public class VypnitoCombatCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
 		if (args.length == 1) {
-			List<String> subCommands = new ArrayList<>(Arrays.asList("reload", "help", "status", "tag", "untag"));
+			List<String> subCommands = new ArrayList<>(Arrays.asList("reload", "help", "status", "tag", "untag", "admin"));
 			return subCommands.stream()
 					.filter(s -> s.startsWith(args[0].toLowerCase()))
-					.filter(s -> sender.hasPermission("combatlogv." + s))
+					.filter(s -> sender.hasPermission("vypnitocombat." + s))
 					.collect(Collectors.toList());
 		}
 		if (args.length == 2 && (args[0].equalsIgnoreCase("status") || args[0].equalsIgnoreCase("tag") || args[0].equalsIgnoreCase("untag"))) {
-			return null; // Allows default player name completion
+			return null;
 		}
 		return new ArrayList<>();
 	}

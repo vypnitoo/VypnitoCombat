@@ -3,15 +3,18 @@ package com.vypnito.vypnitocombat;
 import com.vypnito.vypnitocombat.expansions.VypnitoCombatPlaceholders;
 import com.vypnito.vypnitocombat.integrations.RegionProvider;
 import com.vypnito.vypnitocombat.integrations.WorldGuardBootstrapper;
+import com.vypnito.vypnitocombat.listeners.AdminGuiListener;
 import com.vypnito.vypnitocombat.listeners.CombatListener;
 import com.vypnito.vypnitocombat.listeners.JoinListener;
 import com.vypnito.vypnitocombat.listeners.PlayerQuitListener;
+import com.vypnito.vypnitocombat.managers.AdminGuiManager;
 import com.vypnito.vypnitocombat.managers.CombatManager;
 import com.vypnito.vypnitocombat.managers.ConfigManager;
+import com.vypnito.vypnitocombat.managers.HealthIndicatorManager;
 import com.vypnito.vypnitocombat.managers.MessageManager;
 import com.vypnito.vypnitocombat.utils.ConfigUpdater;
 import com.vypnito.vypnitocombat.utils.UpdateChecker;
-import org.bukkit.Bukkit; // Make sure Bukkit is imported
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -21,6 +24,8 @@ public class VypnitoCombat extends JavaPlugin {
 	private CombatManager combatManager;
 	private ConfigManager configManager;
 	private MessageManager messageManager;
+	private HealthIndicatorManager healthIndicatorManager;
+	private AdminGuiManager adminGuiManager;
 	private RegionProvider regionProvider;
 
 	private BukkitTask elytraMonitorTask;
@@ -39,7 +44,6 @@ public class VypnitoCombat extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		// Use Bukkit.getConsoleSender().sendMessage() for colored console output
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "===================================="));
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "===       &aVypnitoCombat&r          ==="));
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "===       MADE BY VYPNITO        ==="));
@@ -52,12 +56,15 @@ public class VypnitoCombat extends JavaPlugin {
 		this.configManager = new ConfigManager(this.getConfig());
 		this.messageManager = new MessageManager(this);
 		this.combatManager = new CombatManager(this);
+		this.healthIndicatorManager = new HealthIndicatorManager(this);
+		this.adminGuiManager = new AdminGuiManager(this);
 
 		setupIntegrations();
 
 		getServer().getPluginManager().registerEvents(new CombatListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+		getServer().getPluginManager().registerEvents(new AdminGuiListener(this, this.adminGuiManager), this);
 
 		getCommand("vypnitocombat").setExecutor(new VypnitoCombatCommand(this));
 		getCommand("pvp").setExecutor(new PvPCommand(this));
@@ -70,8 +77,7 @@ public class VypnitoCombat extends JavaPlugin {
 			new UpdateChecker(this).check();
 		}
 
-		// These lines are likely already correctly handled by MessageManager
-		getLogger().info(messageManager.getRawMessage("plugin_enabled", "&aVypnitoCombat has been enabled!"));
+		getLogger().info("VypnitoCombat has been enabled!");
 	}
 
 	@Override
@@ -80,7 +86,7 @@ public class VypnitoCombat extends JavaPlugin {
 		if (this.actionBarMonitorTask != null) this.actionBarMonitorTask.cancel();
 		if (this.borderVisualizerTask != null) this.borderVisualizerTask.cancel();
 
-		getLogger().info(messageManager.getRawMessage("plugin_disabled", "&cVypnitoCombat has been disabled!"));
+		getLogger().info("VypnitoCombat has been disabled!");
 	}
 
 	public void reloadPlugin() {
@@ -91,7 +97,6 @@ public class VypnitoCombat extends JavaPlugin {
 		this.messageManager.reloadMessages();
 		manageActionBarTask();
 		manageBorderVisualizerTask();
-		// Also use Bukkit.getConsoleSender() for this reload message if it's intended to be colored
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aVypnitoCombat config and messages reloaded."));
 	}
 
@@ -100,7 +105,6 @@ public class VypnitoCombat extends JavaPlugin {
 			try {
 				this.regionProvider = WorldGuardBootstrapper.initialize(this);
 			} catch (Throwable t) {
-				// Use Bukkit.getConsoleSender() for warnings that need colors
 				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&eAn error occurred while initializing the WorldGuard hook. Region features disabled."));
 			}
 		}
@@ -128,6 +132,8 @@ public class VypnitoCombat extends JavaPlugin {
 	public CombatManager getCombatManager() { return combatManager; }
 	public ConfigManager getConfigManager() { return configManager; }
 	public MessageManager getMessageManager() { return messageManager; }
+	public HealthIndicatorManager getHealthIndicatorManager() { return healthIndicatorManager; }
+	public AdminGuiManager getAdminGuiManager() { return adminGuiManager; }
 	public RegionProvider getRegionProvider() { return regionProvider; }
 	public boolean isUpdateAvailable() { return this.updateAvailable; }
 	public String getLatestVersion() { return this.latestVersion; }

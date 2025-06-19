@@ -45,6 +45,7 @@ public class CombatManager {
 	}
 
 	public void clearVisualBorder(Player player) {
+		if (player == null) return;
 		Set<Location> locations = visualBorderBlocks.remove(player.getUniqueId());
 		if (locations != null) {
 			for (Location loc : locations) {
@@ -86,6 +87,10 @@ public class CombatManager {
 
 		clearVisualBorder(player);
 		combatTimers.remove(player.getUniqueId());
+
+		if (plugin.getConfigManager().isBossBarIndicatorEnabled()) {
+			plugin.getHealthIndicatorManager().hideBossBar(player);
+		}
 
 		if (combatTasks.containsKey(player.getUniqueId())) {
 			combatTasks.get(player.getUniqueId()).cancel();
