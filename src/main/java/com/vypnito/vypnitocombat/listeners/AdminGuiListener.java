@@ -22,12 +22,9 @@ public class AdminGuiListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		// Check if the inventory is our Admin GUI
 		if (!event.getView().getTitle().equals(adminGuiManager.getGuiTitle())) {
 			return;
 		}
-
-		// Prevent players from taking items out of the GUI
 		event.setCancelled(true);
 
 		ItemStack clickedItem = event.getCurrentItem();
@@ -38,8 +35,6 @@ public class AdminGuiListener implements Listener {
 		Player player = (Player) event.getWhoClicked();
 		FileConfiguration config = plugin.getConfig();
 		String configPath = null;
-
-		// Determine which setting was clicked based on the item's material
 		switch (clickedItem.getType()) {
 			case DIAMOND_SWORD:
 				configPath = "global_pvp_enabled";
@@ -51,19 +46,15 @@ public class AdminGuiListener implements Listener {
 				configPath = "punishments.kill_player";
 				break;
 			case ELYTRA:
-				configPath = "combat_restrictions.block_riptide"; // Assuming this represents a general combat restriction toggle
+				configPath = "combat_restrictions.block_riptide";
 				break;
-			// Add more cases here for other settings you want to include
 			default:
-				return; // Not a setting item
+				return;
 		}
-
-		// Toggle the boolean value in the config
 		boolean currentValue = config.getBoolean(configPath);
 		config.set(configPath, !currentValue);
 		plugin.saveConfig();
 
-		// Refresh the GUI to show the updated status
 		adminGuiManager.openAdminGui(player);
 	}
 }

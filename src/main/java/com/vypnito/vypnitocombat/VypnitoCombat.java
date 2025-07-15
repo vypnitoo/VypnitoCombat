@@ -48,27 +48,21 @@ public class VypnitoCombat extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "===       &aVypnitoCombat&r          ==="));
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "===       MADE BY VYPNITO        ==="));
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "===================================="));
-
 		ConfigUpdater.update(this, "config.yml");
 		ConfigUpdater.update(this, "messages.yml");
 		this.reloadConfig();
-
 		this.configManager = new ConfigManager(this.getConfig());
 		this.messageManager = new MessageManager(this);
 		this.combatManager = new CombatManager(this);
 		this.healthIndicatorManager = new HealthIndicatorManager(this);
 		this.adminGuiManager = new AdminGuiManager(this);
-
 		setupIntegrations();
-
 		getServer().getPluginManager().registerEvents(new CombatListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		getServer().getPluginManager().registerEvents(new JoinListener(this), this);
 		getServer().getPluginManager().registerEvents(new AdminGuiListener(this, this.adminGuiManager), this);
-
 		getCommand("vypnitocombat").setExecutor(new VypnitoCombatCommand(this));
 		getCommand("pvp").setExecutor(new PvPCommand(this));
-
 		this.elytraMonitorTask = new ElytraFlightMonitor(this).runTaskTimer(this, 0L, 20L);
 		manageActionBarTask();
 		manageBorderVisualizerTask();
@@ -79,7 +73,6 @@ public class VypnitoCombat extends JavaPlugin {
 
 		getLogger().info("VypnitoCombat has been enabled!");
 	}
-
 	@Override
 	public void onDisable() {
 		if (this.elytraMonitorTask != null) this.elytraMonitorTask.cancel();
@@ -88,7 +81,6 @@ public class VypnitoCombat extends JavaPlugin {
 
 		getLogger().info("VypnitoCombat has been disabled!");
 	}
-
 	public void reloadPlugin() {
 		ConfigUpdater.update(this, "config.yml");
 		ConfigUpdater.update(this, "messages.yml");
@@ -99,7 +91,6 @@ public class VypnitoCombat extends JavaPlugin {
 		manageBorderVisualizerTask();
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aVypnitoCombat config and messages reloaded."));
 	}
-
 	private void setupIntegrations() {
 		if (configManager.isWorldGuardIntegrationEnabled() && Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
 			try {

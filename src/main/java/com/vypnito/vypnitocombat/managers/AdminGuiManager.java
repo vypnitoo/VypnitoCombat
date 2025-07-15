@@ -29,43 +29,31 @@ public class AdminGuiManager {
 	}
 
 	public void openAdminGui(Player player) {
-		Inventory gui = Bukkit.createInventory(null, 27, guiTitle); // 27 slots = 3 rows
-
-		// --- Create items for each setting ---
-
-		// Global PvP Toggle
+		Inventory gui = Bukkit.createInventory(null, 27, guiTitle);
 		gui.setItem(10, createSettingItem(
 				Material.DIAMOND_SWORD,
 				"&bGlobal PvP",
 				"global_pvp_enabled",
 				"&7Toggles PvP across the server."
 		));
-
-		// Action Bar Timer Toggle
 		gui.setItem(12, createSettingItem(
 				Material.COMPASS,
 				"&bAction Bar Timer",
 				"action_bar_timer",
 				"&7Shows a countdown in the action bar."
 		));
-
-		// CombatLog Kill Punishment Toggle
 		gui.setItem(14, createSettingItem(
-				Material.LEATHER_BOOTS, // Represents "kicking" the player
+				Material.LEATHER_BOOTS,
 				"&bKill on CombatLog",
 				"punishments.kill_player",
 				"&7Instantly kills a player if they log out."
 		));
-
-		// A placeholder for a general combat restriction setting
 		gui.setItem(16, createSettingItem(
 				Material.ELYTRA,
 				"&bBlock Riptide",
 				"combat_restrictions.block_riptide",
 				"&7Blocks usage of Riptide tridents."
 		));
-
-		// Fill empty slots with placeholder glass panes
 		ItemStack placeholder = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 		ItemMeta meta = placeholder.getItemMeta();
 		meta.setDisplayName(" ");

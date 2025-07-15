@@ -18,12 +18,10 @@ public class UpdateChecker {
 
 	public void check() {
 		int resourceId = plugin.getConfigManager().getSpigotResourceId();
-		if (resourceId == 0 || resourceId == 99999) { // 99999 is a common placeholder
+		if (resourceId == 0 || resourceId == 99999) {
 			plugin.getLogger().warning("Update checker is enabled, but no valid Spigot Resource ID is configured in config.yml.");
 			return;
 		}
-
-		// Run asynchronously to prevent lagging the main server thread
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
 				URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId);
@@ -61,7 +59,6 @@ public class UpdateChecker {
 			}
 			return false;
 		} catch (NumberFormatException e) {
-			// Can't compare versions with text like "BETA", assume no update.
 			return false;
 		}
 	}

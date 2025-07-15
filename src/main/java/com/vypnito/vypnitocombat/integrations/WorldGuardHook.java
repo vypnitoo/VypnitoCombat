@@ -16,11 +16,9 @@ public class WorldGuardHook implements RegionProvider {
 	private final StateFlag combatLogEnabledFlag;
 
 	public WorldGuardHook() {
-		// The flag is now registered by the bootstrapper. We just retrieve it here.
 		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 		this.combatLogEnabledFlag = (StateFlag) registry.get("combatlog-enabled");
 
-		// This safety check ensures the integration doesn't proceed if the flag is missing for any reason.
 		if (this.combatLogEnabledFlag == null) {
 			throw new IllegalStateException("The 'combatlog-enabled' WorldGuard flag could not be found. It may not have been registered correctly on load.");
 		}

@@ -51,14 +51,12 @@ public class BorderVisualizerTask extends BukkitRunnable {
 		Set<Location> oldBlocks = combatManager.getVisibleBorderBlocks(player.getUniqueId());
 		BlockData wallMaterial = plugin.getConfigManager().getVisualizerWallMaterial().createBlockData();
 
-		// Revert blocks that are no longer part of the border view
 		Set<Location> blocksToRevert = new HashSet<>(oldBlocks);
 		blocksToRevert.removeAll(newBlocks);
 		for (Location loc : blocksToRevert) {
 			player.sendBlockChange(loc, loc.getBlock().getBlockData());
 		}
 
-		// Show new blocks that were not visible before
 		Set<Location> blocksToShow = new HashSet<>(newBlocks);
 		blocksToShow.removeAll(oldBlocks);
 		for (Location loc : blocksToShow) {
@@ -73,20 +71,15 @@ public class BorderVisualizerTask extends BukkitRunnable {
 		Location playerLoc = player.getLocation();
 		int radius = plugin.getConfigManager().getVisualizerDisplayRadius();
 
-		// If the player is not near any safe zone, no need to show a border
 		if (!isNearSafeZone(playerLoc, radius)) {
 			return borderBlocks;
 		}
 
-		// Iterate in a cube around the player
 		for (int x = -radius; x <= radius; x++) {
 			for (int y = -radius; y <= radius; y++) {
 				for (int z = -radius; z <= radius; z++) {
 					Location blockLoc = playerLoc.clone().add(x, y, z);
-
-					// Check if this block is a border (safe next to unsafe)
 					if (isBorderBlock(blockLoc)) {
-						// Only show the border if it's air or passable
 						if (blockLoc.getBlock().getType().isAir() || blockLoc.getBlock().isPassable()) {
 							borderBlocks.add(blockLoc.getBlock().getLocation());
 						}
@@ -99,7 +92,6 @@ public class BorderVisualizerTask extends BukkitRunnable {
 
 	private boolean isBorderBlock(Location location) {
 		boolean isCenterSafe = regionProvider.isLocationSafe(location);
-		// Check immediate neighbors (N, S, E, W, Up, Down)
 		if (isCenterSafe != regionProvider.isLocationSafe(location.clone().add(1, 0, 0))) return true;
 		if (isCenterSafe != regionProvider.isLocationSafe(location.clone().add(-1, 0, 0))) return true;
 		if (isCenterSafe != regionProvider.isLocationSafe(location.clone().add(0, 1, 0))) return true;
@@ -110,8 +102,7 @@ public class BorderVisualizerTask extends BukkitRunnable {
 	}
 
 	private boolean isNearSafeZone(Location location, int radius) {
-		// Simple check to see if any safe zones are in the broader area to optimize
-		for (int x = -radius; x <= radius; x += 4) { // Check less frequently for performance
+		for (int x = -radius; x <= radius; x += 4) {
 			for (int y = -radius; y <= radius; y += 4) {
 				for (int z = -radius; z <= radius; z += 4) {
 					if (regionProvider.isLocationSafe(location.clone().add(x, y, z))) {
